@@ -6,7 +6,7 @@ import { LRUCache } from 'lru-cache';
 const SECRET_TOKEN = 'Too many requests, please try again later.';
 
 const rateLimit = new LRUCache<string, number>({
-  max: 500,
+  max: 10,
   ttl: 15 * 60 * 1000 
 });
 
