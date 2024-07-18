@@ -14,6 +14,7 @@
     "connect-mongo": "^5.1.0",
     "dotenv": "^16.4.5",
     "express-rate-limit": "^7.3.1",
+    "framer-motion": "^11.3.2",
     "iron-session": "^8.0.2",
     "js-cookie": "^3.0.5",
     "jsonwebtoken": "^9.0.2",
@@ -24,7 +25,8 @@
     "next": "14.2.5",
     "next-session": "^4.0.5",
     "react": "^18",
-    "react-dom": "^18"
+    "react-dom": "^18",
+    "react-icons": "^5.2.1"
   },
   "devDependencies": {
     "@types/bcryptjs": "^2.4.6",

@@ -1,52 +1,44 @@
 import { useEffect, useState } from 'react';
+import { UserService } from "@/services/userService";
 
-interface UserInfo {
-    name: string;
-    family_name: string;
-    email: string;
-    phone_number: string;
-    student_number: string;
+interface User {
+  name: string | null;
+  family_name: string | null;
+  email: string | null;
+  phone_number: string | null;
+  student_number: string | null;
 }
 
 const UserProfile = () => {
-    const [userInfo, setUserInfo] = useState<UserInfo | null>(null);
-    const [error, setError] = useState<string | null>(null);
+  const [user, setUser] = useState<User>({
+    name: null,
+    family_name: null,
+    email: null,
+    phone_number: null,
+    student_number: null
+  });
 
-    useEffect(() => {
-        const fetchUserInfo = async () => {
-            try {
-                const response = await fetch('/api/user');
-                if (!response.ok) {
-                    throw new Error('Failed to fetch user information');
-                }
-                const data = await response.json();
-                setUserInfo(data);
-            } catch (err: any) {
-                setError(err.message);
-            }
-        };
+  useEffect(() => {
+    const userService = new UserService();
+    setUser({
+      name: userService.getName() ?? '',
+      family_name: userService.getFamilyName() ?? '',
+      email: userService.getEmail() ?? '',
+      phone_number: userService.getPhoneNumber() ?? '',
+      student_number: userService.getStudentNumber() ?? '',
+    });
+  }, []);
 
-        fetchUserInfo();
-    }, []);
-
-    if (error) {
-        return <div>Error: {error}</div>;
-    }
-
-    if (!userInfo) {
-        return <div>Loading...</div>;
-    }
-
-    return (
-        <div>
-            <h1>User Profile</h1>
-            <p>Name: {userInfo.name}</p>
-            <p>Family Name: {userInfo.family_name}</p>
-            <p>Email: {userInfo.email}</p>
-            <p>Phone Number: {userInfo.phone_number}</p>
-            <p>Student Number: {userInfo.student_number}</p>
-        </div>
-    );
+  return (
+    <div>
+      <h1>User Profile</h1>
+      <p>Name: {user.name}</p>
+      <p>Family Name: {user.family_name}</p>
+      <p>Email: {user.email}</p>
+      <p>Phone Number: {user.phone_number}</p>
+      <p>Student Number: {user.student_number}</p>
+    </div>
+  );
 };
 
 export default UserProfile;
