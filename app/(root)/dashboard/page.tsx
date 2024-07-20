@@ -1,13 +1,15 @@
 "use client"
-import UserProfile from "@/components/profile";
 
-const ProfilePage = () => {
+import React from 'react'; 
+import { Button } from 'primereact/button';
+
+import "primereact/resources/themes/lara-light-cyan/theme.css";
+
+export default function BasicDemo() {
     return (
-        <div>
-        
-            <UserProfile />
+        <div className="card flex justify-content-center">
+            <Button label="Check" icon="pi pi-check" />
         </div>
-    );
-};
-
-export default ProfilePage;
+    )
+}
+        

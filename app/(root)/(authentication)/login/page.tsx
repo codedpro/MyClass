@@ -35,7 +35,7 @@ const LoginPage = () => {
     if (response.ok) {
       console.log("Login successful:", data.token);
       Cookies.set("token", data.token, { expires: 1 });
-      Cookies.set("user", JSON.stringify(data.user), { expires: 1 }); // Stringify user object
+      Cookies.set("user", JSON.stringify(data.user), { expires: 1 });
       router.push("/");
     } else {
       console.error("Failed to login:", data.message);

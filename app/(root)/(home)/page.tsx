@@ -1,13 +1,14 @@
-"use client"
-import UserProfile from "@/components/profile";
+"use client";
+
+import DefaultLayout from "@/components/Layouts/DefaultLaout";
+import Sidebar from "@/components/Sidebar";
 
 const ProfilePage = () => {
-    return (
-        <div>
-           
-            <UserProfile />
-        </div>
-    );
+  return (
+    <DefaultLayout>
+      <></>
+    </DefaultLayout>
+  );
 };
 
 export default ProfilePage;

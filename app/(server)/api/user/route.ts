@@ -7,7 +7,7 @@ export async function GET(request: NextRequest) {
         return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    const userService = new UserService(token);
+    const userService = new UserService();
     const userInfo = await userService.getUserInfo();
 
     if (!userInfo) {
