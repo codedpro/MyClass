@@ -1,0 +1,62 @@
+.flex-center {
+  display: flex;
+  justify-content: flex-start;
+  align-items: flex-end;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  z-index: 1099;
+}
+
+.chart {
+  background-color: #ffffff;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 20vh; /* Adjust the size as needed */
+  height: 30vh; /* Adjust the size as needed */
+  opacity: 0;
+  z-index: 1101;
+}
+
+.coin {
+  position: absolute;
+  bottom: 0rem;
+  left: 1rem;
+  width: 10rem;
+  height: 10rem;
+  z-index: 1100;
+}
+
+.coin img {
+  width: 100%;
+  height: 100%;
+  
+  margin-bottom: 5rem;
+}
+
+.coin-text {
+  position: absolute;
+  inset: 0;
+  top: 2rem; 
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #696863;
+  opacity: 0.6;
+  font-size: 1.25rem;
+  font-weight: 600;
+
+}
+
+@font-face {
+  font-family: "Supercell-magic";
+  src: url("../fonts/Supercell-magic-webfont.ttf") format("truetype");
+}
+
+.custom-font-class {
+  font-family: "Supercell-magic", sans-serif;
+  font-optical-sizing: auto;
+  font-weight: 400;
+  font-style: normal;
+}
