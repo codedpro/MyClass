@@ -14,7 +14,7 @@ export default function UserManagement() {
   const [userToEdit, setUserToEdit] = useState<User | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [isAuthorized, setIsAuthorized] = useState<boolean>(false);
-  const [token, setToken] = useState<string | undefined>(Cookies.get("token"));
+  const [token, setToken] = useState<string | null>(null);
   const userservice = new UserService();
 
   useEffect(() => {

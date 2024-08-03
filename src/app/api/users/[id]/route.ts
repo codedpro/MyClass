@@ -29,8 +29,9 @@ const rateLimitMiddleware = (req: any) => {
 };
 
 const checkAdminRole = (req: NextRequest) => {
+
   const token = req.headers.get("Authorization")?.split(" ")[1];
-  console.log(token)
+  console.log(token);
   if (!token) {
     return { isValid: false, message: "Unauthorized request" };
   }

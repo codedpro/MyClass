@@ -120,7 +120,6 @@ export async function POST(req: NextRequest) {
     isActive === undefined ||
     !startDate ||
     !endDate ||
-
     !examDate
   ) {
     return NextResponse.json(
@@ -225,7 +224,6 @@ export async function PUT(
     isActive === undefined ||
     !startDate ||
     !endDate ||
-
     !examDate
   ) {
     return NextResponse.json(

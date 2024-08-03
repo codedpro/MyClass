@@ -1,90 +1,74 @@
 "use client";
-import { useState } from "react";
-import { useRouter } from "next/navigation";
-import Cookies from "js-cookie";
-import { motion } from "framer-motion";
+import React, { useEffect, useState } from "react";
+import Link from "next/link";
+import Image from "next/image";
+import Breadcrumb from "@/components/Breadcrumbs/Breadcrumb";
+import { Metadata } from "next";
+import DefaultLayout from "@/components/Layouts/DefaultLaout";
+import Signin from "@/components/Auth/Signin";
+import useColorMode from "@/hooks/useColorMode";
 
-const LoginPage = () => {
-  const [form, setForm] = useState({ emailOrPhone: "", password: "" });
-  const router = useRouter();
+const SignIn: React.FC = () => {
+  const [colorMode, setColorMode] = useColorMode();
 
-  const handleChange = (e: any) => {
-    setForm({ ...form, [e.target.name]: e.target.value });
-  };
 
-  const handleSubmit = async (e: any) => {
-    e.preventDefault();
-
-    const response = await fetch("/api/login", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "x-secret-token": "Too many requests, please try again later.",
-      },
-      body: JSON.stringify(form),
-    });
-
-    let data;
-    try {
-      data = await response.json();
-    } catch (error) {
-      console.error("Failed to parse JSON:", error);
-      data = {};
-    }
-
-    if (response.ok) {
-      console.log("Login successful:", data.token);
-      Cookies.set("token", data.token, { expires: 1 });
-      Cookies.set("user", JSON.stringify(data.user), { expires: 1 });
-      router.push("/");
-    } else {
-      console.error("Failed to login:", data.message);
-    }
-  };
-
+  useEffect(() => {
+    setColorMode("dark");
+  }, []);
   return (
-    <div className="flex justify-center items-center h-screen bg-gradient-to-r from-primary to-secondary">
-      <motion.div
-        className="p-10 bg-white rounded-lg shadow-lg w-full max-w-md relative overflow-hidden"
-        initial={{ opacity: 0, y: 50 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5 }}
-      >
-        <div className="absolute inset-0 bg-gradient-to-r from-primary to-secondary opacity-30"></div>
-        <form onSubmit={handleSubmit} className="relative z-10">
-          <h2 className="text-3xl font-bold mb-6 text-accent text-center">
-            Login
-          </h2>
-          <div className="mb-4">
-            <input
-              type="text"
-              name="emailOrPhone"
-              placeholder="Email or Phone Number"
-              value={form.emailOrPhone}
-              onChange={handleChange}
-              className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
-            />
+    <div className="rounded-[10px] bg-white shadow-1 dark:bg-gray-dark dark:shadow-card">
+      <div className="flex flex-wrap items-center">
+        <div className="w-full xl:w-1/2">
+          <div className="w-full p-4 sm:p-12.5 xl:p-15">
+            <Signin />
           </div>
-          <div className="mb-6">
-            <input
-              type="password"
-              name="password"
-              placeholder="Password"
-              value={form.password}
-              onChange={handleChange}
-              className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
-            />
+        </div>
+
+        <div className="hidden w-full p-7.5 xl:block xl:w-1/2">
+          <div className="custom-gradient-1 overflow-hidden rounded-2xl px-12.5 pt-12.5 dark:!bg-dark-2 dark:bg-none">
+            <Link className="mb-10 inline-block" href="/">
+              <Image
+                className="hidden dark:block"
+                src={"/images/logo/logo.svg"}
+                alt="Logo"
+                width={176}
+                height={32}
+              />
+              <Image
+                className="dark:hidden"
+                src={"/images/logo/logo-dark.svg"}
+                alt="Logo"
+                width={176}
+                height={32}
+              />
+            </Link>
+            <p className="mb-3 text-xl font-medium text-dark dark:text-white">
+              Sign in to your account
+            </p>
+
+            <h1 className="mb-4 text-2xl font-bold text-dark dark:text-white sm:text-heading-3">
+              Welcome Back!
+            </h1>
+
+            <p className="w-full max-w-[375px] font-medium text-dark-4 dark:text-dark-6">
+              Please sign in to your account by completing the necessary fields
+              below
+            </p>
+
+            <div className="mt-31">
+              <Image
+                src={"/images/grids/grid-02.svg"}
+                alt="Logo"
+                width={405}
+                height={325}
+                className="mx-auto dark:opacity-30"
+              />
+            </div>
           </div>
-          <button
-            type="submit"
-            className="w-full bg-primary text-white py-3 rounded-lg font-semibold hover:bg-accent transition-colors"
-          >
-            Login
-          </button>
-        </form>
-      </motion.div>
+        </div>
+      </div>
     </div>
   );
 };
 
-export default LoginPage;
+export default SignIn;

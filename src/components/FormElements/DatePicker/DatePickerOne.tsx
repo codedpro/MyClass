@@ -1,6 +1,6 @@
-import { useEffect, useRef } from 'react';
-import flatpickr from 'flatpickr';
-import 'flatpickr/dist/flatpickr.min.css'; // Ensure you import the CSS
+import { useEffect, useRef } from "react";
+import flatpickr from "flatpickr";
+import "flatpickr/dist/flatpickr.min.css"; // Ensure you import the CSS
 
 const DatePickerOne = ({ selectedDate, onDateChange }: any) => {
   const inputRef = useRef(null);
@@ -8,10 +8,10 @@ const DatePickerOne = ({ selectedDate, onDateChange }: any) => {
   useEffect(() => {
     if (inputRef.current) {
       const fp = flatpickr(inputRef.current, {
-        mode: 'single',
+        mode: "single",
         static: true,
-        monthSelectorType: 'static',
-        dateFormat: 'M j, Y',
+        monthSelectorType: "static",
+        dateFormat: "M j, Y",
         prevArrow:
           '<svg class="fill-current" width="7" height="11" viewBox="0 0 7 11"><path d="M5.4 10.8l1.4-1.4-4-4 4-4L5.4 0 0 5.4z" /></svg>',
         nextArrow:
@@ -35,16 +35,21 @@ const DatePickerOne = ({ selectedDate, onDateChange }: any) => {
 
   return (
     <div>
-      <label className="mb-3 block text-body-sm font-medium text-dark dark:text-white">
-        Date picker
-      </label>
       <div className="relative">
         <input
           ref={inputRef}
           className="form-datepicker w-full rounded-[7px] border-[1.5px] border-stroke bg-transparent px-5 py-3 font-normal outline-none transition focus:border-primary active:border-primary dark:border-dark-3 dark:bg-dark-2 dark:focus:border-primary"
           placeholder="mm/dd/yyyy"
           data-class="flatpickr-right"
-          defaultValue={selectedDate ? selectedDate.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' }) : ''}
+          defaultValue={
+            selectedDate
+              ? selectedDate.toLocaleDateString("en-US", {
+                  year: "numeric",
+                  month: "short",
+                  day: "numeric",
+                })
+              : ""
+          }
         />
         <div className="pointer-events-none absolute inset-0 left-auto right-5 flex items-center">
           <svg

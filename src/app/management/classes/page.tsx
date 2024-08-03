@@ -15,22 +15,32 @@ export default function ClassManagement() {
   const [classToEdit, setClassToEdit] = useState<Class | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [isAuthorized, setIsAuthorized] = useState<boolean>(false);
+  const [isCheckingAuth, setIsCheckingAuth] = useState<boolean>(true);
   const [users, setUsers] = useState<User[]>([]);
-  const [token, setToken] = useState<string | undefined>(Cookies.get("token"));
+  const [token, setToken] = useState<string | null>(null);
   const classService = new UserService();
-
   const router = useRouter();
 
   useEffect(() => {
-    if (!isAuthorized) {
-      setToken(classService.getToken());
-    }
+    const checkAuthorization = async () => {
+      setTimeout(() => {
+        const fetchedToken = classService.getToken();
+        setToken(fetchedToken);
+        if (fetchedToken) {
+          setIsAuthorized(true);
+          fetchClasses(fetchedToken);
+          fetchUsers(fetchedToken);
+        } else {
+          setIsAuthorized(false);
+        }
+        setIsCheckingAuth(false);
+      }, 3000); // 3-second delay
+    };
 
-    fetchClasses();
-    fetchUsers();
+    checkAuthorization();
   }, []);
 
-  const fetchClasses = async () => {
+  const fetchClasses = async (token: string) => {
     setIsLoading(true);
     try {
       const response = await fetch("/api/classes/x", {
@@ -41,12 +51,10 @@ export default function ClassManagement() {
       });
       if (response.status === 403) {
         setIsAuthorized(false);
-        router.push("/login");
+        router.push("/");
         return;
       }
-      setIsAuthorized(true);
       const data = await response.json();
-      console.log(data)
       setClasses(data);
     } catch (error) {
       console.error("Failed to fetch classes", error);
@@ -55,7 +63,7 @@ export default function ClassManagement() {
     }
   };
 
-  const fetchUsers = async () => {
+  const fetchUsers = async (token: string) => {
     try {
       const response = await fetch("/api/users/d", {
         method: "GET",
@@ -64,7 +72,6 @@ export default function ClassManagement() {
         },
       });
       const data = await response.json();
-      console.log(data)
       setUsers(data);
     } catch (error) {
       console.error("Failed to fetch users", error);
@@ -73,7 +80,9 @@ export default function ClassManagement() {
 
   const handleSave = async (classData: Class) => {
     const method = classData._id ? "PUT" : "POST";
-    const url = classData._id ? `/api/classes/${classData._id}` : "/api/classes/f";
+    const url = classData._id
+      ? `/api/classes/${classData._id}`
+      : "/api/classes/f";
     try {
       const response = await fetch(url, {
         method,
@@ -84,7 +93,7 @@ export default function ClassManagement() {
         body: JSON.stringify(classData),
       });
       if (response.ok) {
-        fetchClasses();
+        fetchClasses(token!);
         setClassToEdit(null);
       } else {
         console.error("Failed to save class", await response.json());
@@ -103,7 +112,7 @@ export default function ClassManagement() {
         },
       });
       if (response.ok) {
-        fetchClasses();
+        fetchClasses(token!);
       } else {
         console.error("Failed to delete class", await response.json());
       }
@@ -113,35 +122,50 @@ export default function ClassManagement() {
   };
 
   const handleEdit = (classData: Class) => {
-    const transformedClassData = {
-      ...classData,
-      dayChecks: {
-        day1: Boolean(classData.schedule.day1),
-        day2: Boolean(classData.schedule.day2),
-        day3: Boolean(classData.schedule.day3),
-        day4: Boolean(classData.schedule.day4),
-        day5: Boolean(classData.schedule.day5),
-        day6: Boolean(classData.schedule.day6),
-        day7: Boolean(classData.schedule.day7),
-      },
-      times: {
-        day1: classData.schedule.day1 || '',
-        day2: classData.schedule.day2 || '',
-        day3: classData.schedule.day3 || '',
-        day4: classData.schedule.day4 || '',
-        day5: classData.schedule.day5 || '',
-        day6: classData.schedule.day6 || '',
-        day7: classData.schedule.day7 || '',
-      }
+    const schedule = classData.schedule || {};
+    const dayChecks = {
+      day1: !!schedule.day1,
+      day2: !!schedule.day2,
+      day3: !!schedule.day3,
+      day4: !!schedule.day4,
+      day5: !!schedule.day5,
+      day6: !!schedule.day6,
+      day7: !!schedule.day7,
     };
-  
-    setClassToEdit(classData);
+
+    const editableClass = {
+      ...classData,
+      dayChecks,
+      times: {
+        day1: schedule.day1 || "",
+        day2: schedule.day2 || "",
+        day3: schedule.day3 || "",
+        day4: schedule.day4 || "",
+        day5: schedule.day5 || "",
+        day6: schedule.day6 || "",
+        day7: schedule.day7 || "",
+      },
+    };
+
+    setClassToEdit(editableClass as Class);
   };
 
   const handleCancel = () => {
     setClassToEdit(null);
     router.refresh();
   };
+
+  if (isCheckingAuth) {
+    return (
+      <div>
+        <DefaultLayout>
+          <p className="text-bold text-center text-xl">
+            Authorizing...
+          </p>
+        </DefaultLayout>
+      </div>
+    );
+  }
 
   if (!isAuthorized) {
     return (
@@ -165,7 +189,6 @@ export default function ClassManagement() {
               classData={classToEdit}
               onSave={handleSave}
               onCancel={handleCancel}
-              users={users}
             />
           </div>
           <div className="flex flex-col gap-9">

@@ -14,9 +14,12 @@ interface User {
 
 export class UserService {
   private userInfo: User | null = null;
+  private token: string | null = null;
 
   constructor() {
     this.userInfo = this.getUserFromCookie();
+    this.token = this.getTokenFromCookie();
+
   }
 
   private getUserFromCookie(): User | null {
@@ -31,9 +34,11 @@ export class UserService {
     }
     return null;
   }
-
-  public getToken() {
-    return Cookies.get("token");
+  private getTokenFromCookie(): string | null {
+    return Cookies.get("tokens") || null;
+  }
+  public getToken(): string | null {
+    return this.token;
   }
   public getUserInfo(): User | null {
     return this.userInfo;

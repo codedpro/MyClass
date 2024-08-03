@@ -8,7 +8,11 @@ interface ClassListProps {
   handleDelete: (classId: string) => void;
 }
 
-const ClassList: FC<ClassListProps> = ({ classes, handleEdit, handleDelete }) => {
+const ClassList: FC<ClassListProps> = ({
+  classes,
+  handleEdit,
+  handleDelete,
+}) => {
   const [visibleClassesCount, setVisibleClassesCount] = useState(15);
   const [searchQuery, setSearchQuery] = useState("");
 
@@ -43,23 +47,27 @@ const ClassList: FC<ClassListProps> = ({ classes, handleEdit, handleDelete }) =>
       />
 
       <div className="flex flex-col">
-        <div className="grid grid-cols-6 sm:grid-cols-7 gap-29 md:gap-34">
+        <div className="grid grid-cols-6 sm:grid-cols-7 gap-20 md:gap-20 text-center">
           <div className="col-span-2 pb-3.5">
-            <h5 className="text-sm font-medium uppercase xsm:text-base">Class Name</h5>
+            <h5 className="text-sm font-medium uppercase xsm:text-base ">
+              Name
+            </h5>
           </div>
 
           <div className="text-center">
-            <h5 className="text-sm font-medium uppercase xsm:text-base">Class ID</h5>
+            <h5 className="text-sm font-medium uppercase xsm:text-base">ID</h5>
           </div>
 
           <div className="text-center col-span-2">
-            <h5 className="text-sm font-medium uppercase xsm:text-base">Actions</h5>
+            <h5 className="text-sm font-medium uppercase xsm:text-base">
+              Actions
+            </h5>
           </div>
         </div>
 
         {visibleClasses.map((classData, key) => (
           <div
-            className={`grid grid-cols-6 sm:grid-cols-7 gap-32 md:gap-36 ${
+            className={`grid grid-cols-6 sm:grid-cols-7 gap-20 md:gap-20 ${
               key === visibleClasses.length - 1
                 ? ""
                 : "border-b border-stroke dark:border-dark-3"
