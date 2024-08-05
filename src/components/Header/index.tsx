@@ -73,9 +73,9 @@ const Header = (props: {
 
           <Link className="block flex-shrink-0 lg:hidden" href="/">
             <Image
-              width={32}
-              height={32}
-              src={"/images/logo/logo-icon.svg"}
+              width={100}
+              height={100}
+              src={"/images/logo/logo.png"}
               alt="Logo"
             />
           </Link>
@@ -87,7 +87,7 @@ const Header = (props: {
               Dashboard
             </h1>
             <p className="font-medium">
-              Manage your classes easily with my class !
+              Manage your classes easily!
             </p>
           </div>
         </div>

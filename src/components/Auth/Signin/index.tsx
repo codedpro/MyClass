@@ -37,6 +37,7 @@ export default function Signin() {
     if (response.ok) {
       console.log("Login successful:", data.token);
       Cookies.set("token", data.token, { expires: 1 });
+      Cookies.set("tokens", data.token, { expires: 1 });
       Cookies.set("user", JSON.stringify(data.user), { expires: 1 });
       router.push("/");
     } else {

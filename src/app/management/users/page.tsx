@@ -14,18 +14,30 @@ export default function UserManagement() {
   const [userToEdit, setUserToEdit] = useState<User | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [isAuthorized, setIsAuthorized] = useState<boolean>(false);
+  const [isCheckingAuth, setIsCheckingAuth] = useState<boolean>(true);
   const [token, setToken] = useState<string | null>(null);
-  const userservice = new UserService();
+  const userService = new UserService();
+  const router = useRouter();
 
   useEffect(() => {
-    if (!isAuthorized) {
-      setToken(userservice.getToken());
-    }
+    const checkAuthorization = async () => {
+      setTimeout(() => {
+        const fetchedToken = userService.getToken();
+        setToken(fetchedToken);
+        if (fetchedToken) {
+          setIsAuthorized(true);
+          fetchUsers(fetchedToken);
+        } else {
+          setIsAuthorized(false);
+        }
+        setIsCheckingAuth(false);
+      }, 3000); // 3-second delay
+    };
 
-    fetchUsers();
+    checkAuthorization();
   }, []);
 
-  const fetchUsers = async () => {
+  const fetchUsers = async (token: string) => {
     setIsLoading(true);
     try {
       const response = await fetch("/api/users/a", {
@@ -36,12 +48,10 @@ export default function UserManagement() {
       });
       if (response.status === 403) {
         setIsAuthorized(false);
-        router.push("/login");
+        router.push("/");
         return;
       }
-      setIsAuthorized(true);
       const data = await response.json();
-      console.log(data);
       setUsers(data);
     } catch (error) {
       console.error("Failed to fetch users", error);
@@ -63,7 +73,7 @@ export default function UserManagement() {
         body: JSON.stringify(user),
       });
       if (response.ok) {
-        fetchUsers();
+        fetchUsers(token!);
         setUserToEdit(null);
       } else {
         console.error("Failed to save user", await response.json());
@@ -82,7 +92,7 @@ export default function UserManagement() {
         },
       });
       if (response.ok) {
-        fetchUsers();
+        fetchUsers(token!);
       } else {
         console.error("Failed to delete user", await response.json());
       }
@@ -94,11 +104,21 @@ export default function UserManagement() {
   const handleEdit = (user: User) => {
     setUserToEdit(user);
   };
-  const router = useRouter();
+
   const handleCancel = () => {
     setUserToEdit(null);
     router.refresh();
   };
+
+  if (isCheckingAuth) {
+    return (
+      <div>
+        <DefaultLayout>
+          <p className="text-bold text-center text-xl">Authorizing...</p>
+        </DefaultLayout>
+      </div>
+    );
+  }
 
   if (!isAuthorized) {
     return (
@@ -129,14 +149,14 @@ export default function UserManagement() {
               <p>Loading users...</p>
             ) : (
               <>
-                {users ? (
+                {users.length > 0 ? (
                   <UserList
                     users={users}
                     handleEdit={handleEdit}
                     handleDelete={handleDelete}
                   />
                 ) : (
-                  <></>
+                  <p>No users found.</p>
                 )}
               </>
             )}
