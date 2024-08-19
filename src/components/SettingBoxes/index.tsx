@@ -211,7 +211,7 @@ const SettingBoxes = () => {
                         name="StudentNumber"
                         id="StudentNumber"
                         placeholder="Student Number"
-                        defaultValue={userservice.getstudent_number() ?? ""}
+                        defaultValue={userservice.getStudentNumber() ?? ""}
                       />
                     </div>
                   </div>

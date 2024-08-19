@@ -32,7 +32,7 @@ const DropdownUser = () => {
       family_name: userService.getFamilyName() ?? "",
       email: userService.getEmail() ?? "",
       phone_number: userService.getPhoneNumber() ?? "",
-      student_number: userService.getstudent_number() ?? "",
+      student_number: userService.getStudentNumber() ?? "",
       profile: userService.getProfile() ?? "",
     });
   }, []);

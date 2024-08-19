@@ -19,7 +19,6 @@ export class UserService {
   constructor() {
     this.userInfo = this.getUserFromCookie();
     this.token = this.getTokenFromCookie();
-
   }
 
   private getUserFromCookie(): User | null {
@@ -34,12 +33,23 @@ export class UserService {
     }
     return null;
   }
-  private getTokenFromCookie(): string | null {
-    return Cookies.get("tokens") || null;
+
+private getTokenFromCookie(): string | null {
+    const token = Cookies.get("token");
+    console.log("Token retrieved from cookie:", token); // Add this line to debug
+    if (token) {
+      return token;
+    } else {
+      console.error("Token not found in cookies");
+      return null;
+    }
   }
+
+
   public getToken(): string | null {
     return this.token;
   }
+
   public getUserInfo(): User | null {
     return this.userInfo;
   }
@@ -60,22 +70,26 @@ export class UserService {
     return this.userInfo ? this.userInfo.phone_number : null;
   }
 
-  public getstudent_number(): string | null {
+  public getStudentNumber(): string | null {
     return this.userInfo ? this.userInfo.student_number : null;
   }
+
   public getProfile(): string | null {
     return this.userInfo ? this.userInfo.profile : null;
   }
+
   public getRole(): string | null {
     return this.userInfo ? this.userInfo.role : null;
   }
+
   public getUserType(): string | null {
-    return this.userInfo ? this.userInfo.role : null;
+    return this.userInfo ? this.userInfo.usertype : null;
   }
 
   public logout(): void {
     Cookies.remove("user");
     Cookies.remove("token");
     this.userInfo = null;
+    this.token = null;
   }
 }

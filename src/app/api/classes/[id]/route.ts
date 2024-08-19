@@ -163,8 +163,42 @@ export async function POST(req: NextRequest) {
       examDate,
     });
 
+    const classId = result.insertedId;
+
+    const daysOfWeek = [day1, day2, day3, day4, day5, day6, day7];
+    const start = new Date(startDate);
+    const end = new Date(endDate);
+
+    const activities = [];
+    let currentDate = new Date(start);
+
+    while (currentDate <= end) {
+      const dayOfWeek = currentDate.getDay();
+      const classDayIndex = (dayOfWeek + 6) % 7;
+
+      if (daysOfWeek[classDayIndex]) {
+        activities.push({
+          classId,
+          date: new Date(currentDate),
+          time: daysOfWeek[classDayIndex],
+          presentEnable: false,
+          students: [],
+          alerts: [], 
+          notes: [],  
+          exercises: []
+        });
+      }
+
+      currentDate.setDate(currentDate.getDate() + 1);
+    }
+
+    if (activities.length > 0) {
+      const activitiesCollection = db.collection("activities");
+      await activitiesCollection.insertMany(activities);
+    }
+
     return NextResponse.json(
-      { insertedId: result.insertedId },
+      { insertedId: classId, activityCount: activities.length },
       { status: 201 }
     );
   } catch (error: any) {
